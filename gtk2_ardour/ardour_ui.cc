@@ -4358,6 +4358,14 @@ ARDOUR_UI::save_as_template_dialog_response (int response, SaveTemplateDialog* d
 void
 ARDOUR_UI::save_route_template (bool local)
 {
+	if(!_session) {
+		return;
+	}
+
+	if(!editor) {
+		return;
+	}
+
 	const string dir = local ?
 						Glib::build_filename(_session->session_directory().root_path(), route_templates_dir_name)
 						: ARDOUR::user_route_template_directory ();
@@ -4366,14 +4374,30 @@ ARDOUR_UI::save_route_template (bool local)
 		error << string_compose (_("Cannot create route template directory %1"), dir) << endmsg;
 		return;
 	}
-	
-	std::string name;
-	std::string comment;
-	if ( false /*only one route selected)*/ ) {
-		//name = route->name();
-		//comment = route->comment();
+
+	RouteList rl = editor->get_selection().tracks.routelist();
+
+	//composite of all selected track comments
+	string comment;
+	for(RouteList::const_iterator it = rl.begin(); it != rl.end(); it++) {
+		//skip special tracks since they will be skipped anyways
+		if((*it)->is_auditioner() || (*it)->is_master() || (*it)->is_monitor()) {
+			continue;
+		}
+
+		if((*it)->comment() == string()) {
+			continue;
+		}
+
+		comment.append((*it)->comment());
+
+		if(it != rl.end()) {
+			comment.append("\n");
+		}
 	}
-	
+
+	const string name = _session->name();
+
 	SaveTemplateDialog* d = new SaveTemplateDialog (name, comment, local);
 	d->signal_response().connect (sigc::bind (sigc::mem_fun (*this, &ARDOUR_UI::save_as_template_dialog_response), d));
 	d->show ();
