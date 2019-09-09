@@ -4424,6 +4424,20 @@ ARDOUR_UI::apply_route_template ()
 void
 ARDOUR_UI::new_from_route_template ()
 {
+	_template_picker.set_title(_("Pick a Mixer Template"));
+	_template_picker.set_size_request(800, 400);
+
+	if(!_template_list) {
+		if(_session) {
+			_template_list = new MixerSnapshotList(true);
+			_template_list->set_session(_session);
+			_template_picker.add(_template_list->display());
+		}
+	}
+	_template_list->set_make_tracks(true);
+	_template_list->redisplay();
+	_template_picker.show_all();
+	_template_picker.present();
 }
 
 void
