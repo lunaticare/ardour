@@ -68,6 +68,27 @@ let
     };
   };
 
+  sratom = stdenv.mkDerivation rec {
+    pname = "sratom";
+    version = "0.6.2";
+
+    src = fetchurl {
+      url = "https://download.drobilla.net/${pname}-${version}.tar.bz2";
+      sha256 = "0lz883ravxjf7r9wwbx2gx9m8vhyiavxrl9jdxfppjxnsralll8a";
+    };
+
+    nativeBuildInputs = [ pkgconfig wafHook ];
+    buildInputs = [ lv2 python serd sord ];
+
+    meta = with stdenv.lib; {
+      homepage = http://drobilla.net/software/sratom;
+      description = "A library for serialising LV2 atoms to/from RDF";
+      license = licenses.mit;
+      maintainers = [ maintainers.goibhniu ];
+      platforms = platforms.linux;
+    };
+  };
+
   vampSDK = stdenv.mkDerivation {
     name = "vamp-sdk-2.7.1";
     # version = "2.7.1";
@@ -139,31 +160,31 @@ let
   devenv = stdenv.mkDerivation {
     name = "dev-environment"; # Probably put a more meaningful name here
     buildInputs = [ 
-        gnome2.gtk 
-        python27Packages.python 
-        boost 
-        glibmm 
-        clang
-        pkgconfig 
-        libsndfile.dev 
-        curl
-        libarchive
-        liblo
-        taglib
-        vampSDK
-        rubberband
-        fftwFloat
-        aubio
-        # alsaLib
-        # aubio 
-        boost 
-        cairomm 
-        curl 
-        doxygen 
-        dbus 
-        fftw 
-        fftwSinglePrec 
-        flac
+      gnome2.gtk 
+      python27Packages.python 
+      boost 
+      glibmm 
+      clang
+      pkgconfig 
+      libsndfile.dev 
+      curl
+      libarchive
+      liblo
+      taglib
+      vampSDK
+      rubberband
+      fftwFloat
+      aubio
+      # alsaLib
+      # aubio 
+      boost 
+      cairomm 
+      curl 
+      doxygen 
+      dbus 
+      fftw 
+      fftwSinglePrec 
+      flac
       glibmm 
       graphviz 
       gtkmm2 
@@ -193,7 +214,7 @@ let
       rubberband 
       serd 
       sord
-      # sratom 
+      sratom 
       # suil 
       taglib 
       vampSDK 
