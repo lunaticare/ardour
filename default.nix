@@ -24,6 +24,50 @@ let
     };
   };
 
+  lv2 = stdenv.mkDerivation rec {
+    pname = "lv2";
+    version = "1.16.0";
+
+    src = fetchurl {
+      url = "http://lv2plug.in/spec/${pname}-${version}.tar.bz2";
+      sha256 = "1ppippbpdpv13ibs06b0bixnazwfhiw0d0ja6hx42jnkgdyp5hyy";
+    };
+
+    nativeBuildInputs = [ pkgconfig  ];
+    buildInputs = [ gtk2 libsndfile python ];
+
+    # wafFlags = "--no-plugins --prefix=$(out) --lv2dir=$(out)";
+    # wafFlags = [
+    #   "--no-plugins" 
+    #   "--lv2dir=$out"
+    # ];
+    # wafConfigureFlags = [
+    #   "--no-plugins" 
+    #   "--lv2dir=${out}/bin" 
+    # ];
+
+    # configurePhase = ''
+    # echo 123
+    # '';
+
+    # buildPhase = ''
+    # echo 123
+    # '';
+
+    installPhase = ''
+    ./waf configure build --no-plugins --prefix="$out" --lv2dir="$out"
+    ./waf install
+    '';
+
+    meta = with stdenv.lib; {
+      homepage = http://lv2plug.in;
+      description = "A plugin standard for audio systems";
+      license = licenses.mit;
+      maintainers = [ maintainers.goibhniu ];
+      platforms = platforms.darwin;
+    };
+  };
+
   vampSDK = stdenv.mkDerivation {
     name = "vamp-sdk-2.7.1";
     # version = "2.7.1";
@@ -140,7 +184,7 @@ let
       libxml2 
       libxslt 
       # lilv 
-      # lv2
+      lv2
       makeWrapper 
       pango 
       perl 
