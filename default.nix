@@ -109,7 +109,7 @@ let
       platforms = platforms.linux;
     };
   };
-  
+
   vampSDK = stdenv.mkDerivation {
     name = "vamp-sdk-2.7.1";
     # version = "2.7.1";
@@ -178,11 +178,24 @@ let
     };
   };
 
+  tag = "5.12";
+
   devenv = stdenv.mkDerivation {
     name = "dev-environment"; # Probably put a more meaningful name here
+    src = fetchgit {
+      url = "git://git.ardour.org/ardour/ardour.git";
+      rev = "ae0dcdc0c5d13483271065c360e378202d20170a";
+      sha256 = "0mla5lm51ryikc2rrk53max2m7a5ds6i1ai921l2h95wrha45nkr";
+    };
+
+    nativeBuildInputs = [ 
+      pkgconfig 
+      python27Packages.python 
+      wafHook
+    ];
+
     buildInputs = [ 
       gnome2.gtk 
-      python27Packages.python 
       boost 
       glibmm 
       clang
@@ -240,6 +253,31 @@ let
       taglib 
       vampSDK 
       libarchive
+      frameworks.AppKit
+      frameworks.CoreMedia 
+      frameworks.AudioUnit
+      frameworks.Accelerate
+      frameworks.AudioToolbox
+      frameworks.CoreServices 
+      frameworks.CoreFoundation
+      frameworks.Carbon
+      frameworks.Cocoa
+      wafHook
+    ];
+
+    propagatedBuildInputs = stdenv.lib.optionals stdenv.isDarwin [ ];
+
+    patchPhase = ''
+      printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = \"${tag}\"; }\n' > libs/ardour/revision.cc
+      patchShebangs ./tools/
+    '';
+  
+    wafConfigureFlags = [
+      "--strict" 
+      "--ptformat" 
+      "--with-backends=jack,coreaudio,dummy"
+      "--optimize" 
+      "--freebie"
     ];
   };
 
