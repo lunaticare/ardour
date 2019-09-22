@@ -966,8 +966,9 @@ def configure(conf):
         #       off processor type.  Need to add in a check
         #       for that.
         #
-        conf.env.append_value('CXXFLAGS_OSX', '-F/System/Library/Frameworks')
-        conf.env.append_value('CXXFLAGS_OSX', '-F/Library/Frameworks')
+        # conf.env.append_value('CXXFLAGS_OSX', '-F/System/Library/Frameworks')
+        # conf.env.append_value('CXXFLAGS_OSX', '-F/Library/Frameworks')
+        conf.env.append_value('CXXFLAGS_OSX', os.getenv('NIX_TARGET_CFLAGS_COMPILE', '').split(' '))
 
         conf.env.append_value('LINKFLAGS_OSX', ['-framework', 'AppKit'])
         conf.env.append_value('LINKFLAGS_OSX', ['-framework', 'CoreAudio'])
