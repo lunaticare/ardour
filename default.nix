@@ -256,6 +256,7 @@ let
       frameworks.AppKit
       frameworks.CoreMedia 
       frameworks.AudioUnit
+      frameworks.CoreAudioKit
       frameworks.Accelerate
       frameworks.AudioToolbox
       frameworks.CoreServices 
