@@ -278,6 +278,7 @@ let
       "--with-backends=jack,coreaudio,dummy"
       "--optimize" 
       "--freebie"
+      "--cxx11"
     ];
   };
 
