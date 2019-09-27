@@ -269,7 +269,8 @@ let
     propagatedBuildInputs = stdenv.lib.optionals stdenv.isDarwin [ ];
 
     patchPhase = ''
-      printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = \"${tag}\"; }\n' > libs/ardour/revision.cc
+      printf '#include "libs/ardour/ardour/revision.h"\nnamespace ARDOUR { const char* revision = \"${tag}\"; const char* date = "2019-09-23"; }\n' > libs/ardour/revision.cc
+      cat libs/ardour/revision.cc
       patchShebangs ./tools/
     '';
   
